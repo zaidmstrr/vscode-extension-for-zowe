@@ -1157,13 +1157,14 @@ export class Profiles extends ProfilesCache {
         }
 
         try {
-            loginTokenType = await ZoweExplorerApiRegister.getInstance().getCommonApi(serviceProfile).getTokenTypeName();
+            loginTokenType = serviceProfile.profile?.tokenType ??
+                await ZoweExplorerApiRegister.getInstance().getCommonApi(serviceProfile).getTokenTypeName();
         } catch (error) {
             ZoweLogger.warn(error);
             Gui.showMessage(localize("ssoAuth.noBase", "This profile does not support token authentication."));
             return;
         }
-        if (loginTokenType && loginTokenType !== zowe.imperative.SessConstants.TOKEN_TYPE_APIML) {
+        if (loginTokenType && !loginTokenType.startsWith(zowe.imperative.SessConstants.TOKEN_TYPE_APIML)) {
             // this will handle extenders
             if (node) {
                 session = node.getSession();
@@ -1240,14 +1241,15 @@ export class Profiles extends ProfilesCache {
         }
         try {
             // this will handle extenders
-            if (serviceProfile.type !== "zosmf" && serviceProfile.profile?.tokenType !== zowe.imperative.SessConstants.TOKEN_TYPE_APIML) {
+            if (serviceProfile.type !== "zosmf" && !serviceProfile.profile?.tokenType.startsWith(zowe.imperative.SessConstants.TOKEN_TYPE_APIML)) {
                 await ZoweExplorerApiRegister.getInstance()
                     .getCommonApi(serviceProfile)
                     .logout(await node.getSession());
             } else {
                 // this will handle base profile apiml tokens
                 const baseProfile = await this.fetchBaseProfile();
-                const loginTokenType = ZoweExplorerApiRegister.getInstance().getCommonApi(serviceProfile).getTokenTypeName();
+                const loginTokenType = baseProfile.profile?.tokenType ??
+                    ZoweExplorerApiRegister.getInstance().getCommonApi(serviceProfile).getTokenTypeName();
                 const updSession = new zowe.imperative.Session({
                     hostname: serviceProfile.profile.host,
                     port: serviceProfile.profile.port,
@@ -1376,8 +1378,8 @@ export class Profiles extends ProfilesCache {
         const setSecure = mProfileInfo.isSecured();
         const prof = mProfileInfo.getAllProfiles(profile.type).find((p) => p.profName === profile.name);
         const mergedArgs = mProfileInfo.mergeArgsForProfile(prof);
-        await mProfileInfo.updateKnownProperty({ mergedArgs, property: "tokenValue", value: undefined, setSecure });
-        await mProfileInfo.updateKnownProperty({ mergedArgs, property: "tokenType", value: undefined });
+        await mProfileInfo.removeKnownProperty({ mergedArgs, property: "tokenValue" });
+        await mProfileInfo.removeKnownProperty({ mergedArgs, property: "tokenType" });
     }
 
     private async loginCredentialPrompt(): Promise<string[]> {

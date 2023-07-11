@@ -21,7 +21,7 @@ class ZosmfApiCommon implements ZoweExplorerApi.ICommon {
     }
 
     private session: zowe.imperative.Session;
-    public constructor(public profile?: zowe.imperative.IProfileLoaded) {}
+    public constructor(public profile?: zowe.imperative.IProfileLoaded) { }
 
     public getProfileTypeName(): string {
         return ZosmfApiCommon.getProfileTypeName();
@@ -30,8 +30,10 @@ class ZosmfApiCommon implements ZoweExplorerApi.ICommon {
     public getSessionFromCommandArgument(cmdArgs: zowe.imperative.ICommandArguments): zowe.imperative.Session {
         const sessCfg = zowe.ZosmfSession.createSessCfgFromArgs(cmdArgs);
         zowe.imperative.ConnectionPropsForSessCfg.resolveSessCfgProps(sessCfg, cmdArgs);
-        const sessionToUse = new zowe.imperative.Session(sessCfg);
-        return sessionToUse;
+        // if (zowe.imperative.ConnectionPropsForSessCfg.sessHasCreds(sessCfg)) {
+        return new zowe.imperative.Session(sessCfg);
+        // }
+        // return sessCfg;
     }
 
     public getSession(profile?: zowe.imperative.IProfileLoaded): zowe.imperative.Session {
@@ -55,13 +57,13 @@ class ZosmfApiCommon implements ZoweExplorerApi.ICommon {
             basePath: serviceProfile.profile.basePath as string,
             rejectUnauthorized: serviceProfile.profile.rejectUnauthorized as boolean,
         };
-        if (!serviceProfile.profile.tokenValue) {
+        if (serviceProfile.profile.user && serviceProfile.profile.password) {
             cmdArgs = {
                 ...cmdArgs,
                 user: serviceProfile.profile.user as string,
                 password: serviceProfile.profile.password as string,
             };
-        } else {
+        } else if (serviceProfile.profile.tokenValue) {
             cmdArgs = {
                 ...cmdArgs,
                 tokenType: serviceProfile.profile.tokenType as string,
