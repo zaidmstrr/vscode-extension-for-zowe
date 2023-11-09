@@ -9,7 +9,7 @@
  *
  */
 
-import { AbstractSession, ISession } from "@zowe/imperative";
+import { AbstractSession, ISession } from "@zowe/core-for-zowe-sdk";
 
 /**
  * Non-abstract session class

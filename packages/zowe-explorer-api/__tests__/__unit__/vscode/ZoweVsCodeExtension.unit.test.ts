@@ -12,7 +12,7 @@
 import * as vscode from "vscode";
 import { Gui } from "../../../src/globals/Gui";
 import { MessageSeverity, IZoweLogger } from "../../../src/logger/IZoweLogger";
-import { IProfileLoaded } from "@zowe/imperative";
+import { IProfileLoaded } from "@zowe/core-for-zowe-sdk";
 import { IPromptCredentialsOptions, ZoweVsCodeExtension } from "../../../src/vscode";
 import { ProfilesCache, IApiRegisterClient } from "../../../src";
 import { imperative } from "@zowe/cli";

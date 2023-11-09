@@ -33,7 +33,7 @@
     "watch": "tsc -watch -p ./"
   },
   "dependencies": {
-    "@zowe/cli": "^7.18.0",
+    "@zowe/cli": "8.0.0-merged.202311091724",
     "@zowe/zowe-explorer-api": "^2.10.0",
     "ssh2-sftp-client": "^9.1.0"
   },

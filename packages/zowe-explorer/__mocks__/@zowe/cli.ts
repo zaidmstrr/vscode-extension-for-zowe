@@ -13,10 +13,10 @@ import * as path from "path";
 import * as os from "os";
 import { Session } from "../Session";
 import { IListOptions } from "@zowe/cli";
-import * as imperative from "@zowe/imperative";
+import * as imperative from "@zowe/core-for-zowe-sdk";
 
-jest.mock("@zowe/imperative");
-export * as imperative from "@zowe/imperative";
+jest.mock("@zowe/core-for-zowe-sdk");
+export * as imperative from "@zowe/core-for-zowe-sdk";
 
 export function getZoweDir(): string {
     const defaultHome = path.join(os.homedir(), ".zowe");
@@ -184,7 +184,7 @@ export namespace List {
     }
 
     export class Items {
-        constructor(public dsname: string, public dsorg: string, public member: string, public migr?: string) {}
+        constructor(public dsname: string, public dsorg: string, public member: string, public migr?: string) { }
     }
 
     export function fileList(session: Session, hlq: string, options: IListOptions): Promise<IZosFilesResponse> {

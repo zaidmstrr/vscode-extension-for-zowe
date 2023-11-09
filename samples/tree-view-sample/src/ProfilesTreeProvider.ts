@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { IProfAttrs, Logger } from "@zowe/imperative";
+import { IProfAttrs, Logger } from "@zowe/core-for-zowe-sdk";
 import { ProfilesCache } from "@zowe/zowe-explorer-api";
 
 class ProfilesNode extends vscode.TreeItem {
